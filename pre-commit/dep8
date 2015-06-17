@@ -1,0 +1,39 @@
+#!/bin/sh
+# dep8: pre-commit snippet to check for DEP8 compat
+# 
+# Copyright © 2015 IOhannes m zmölnig <zmoelnig@umlaeute.mur.at>
+# 
+# This file is part of umlaeute/git-hooks.
+# 
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+############################################################
+# checks the to-be-committed sources for PEP8-compatibility
+
+# TODO: weird filenames (with linebreaks)
+# TODO: factor out the TEMPDIR code
+#       (so multiple hooks can use the same tempdir)
+
+PEP8CLEAN=yes
+TEMPDIR=$(mktemp -d)
+git checkout-index --prefix=${TEMPDIR}/ -af
+git diff --cached --name-only --diff-filter=ACM |
+    sed  -e "s|^|${TEMPDIR}/|" -n -e '/\.py$/p' |
+    xargs --no-run-if-empty pep8 -v || PEP8CLEAN=no
+rm -rf "${TEMPDIR}"
+
+if [ "x${PEP8CLEAN}" = "xno" ]; then
+ exit 1
+fi
+exit 0
