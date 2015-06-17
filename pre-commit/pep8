@@ -25,12 +25,17 @@
 # TODO: factor out the TEMPDIR code
 #       (so multiple hooks can use the same tempdir)
 
+PEP8=$(which pep8)
 PEP8CLEAN=yes
 TEMPDIR=$(mktemp -d)
+if [ -n "${PEP8}" ]; then
 git checkout-index --prefix=${TEMPDIR}/ -af
 git diff --cached --name-only --diff-filter=ACM |
     sed  -e "s|^|${TEMPDIR}/|" -n -e '/\.py$/p' |
-    xargs --no-run-if-empty pep8 -v || PEP8CLEAN=no
+    xargs --no-run-if-empty "${PEP8}" || PEP8CLEAN=no
+else
+ echo "skipping PEP8 check (no pep8 binary found)"
+fi
 rm -rf "${TEMPDIR}"
 
 if [ "x${PEP8CLEAN}" = "xno" ]; then
