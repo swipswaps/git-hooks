@@ -1,5 +1,5 @@
 #!/bin/sh
-# dep8: pre-commit snippet to check for DEP8 compat
+# pep8: pre-commit snippet to check for PEP8 compat
 # 
 # Copyright © 2015 IOhannes m zmölnig <zmoelnig@umlaeute.mur.at>
 # 

@@ -32,7 +32,7 @@ grouped by use-cases
 
 ## python
 
-### pre-commit/dep8
+### pre-commit/pep8
 
 ## hylang
 (todo: pre-commit hook against hanging parens)
